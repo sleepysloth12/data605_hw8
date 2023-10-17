@@ -1,0 +1,126 @@
+---
+title: "Data 605 HW# 8"
+author: "Jean Jimenez"
+date: "2023-10-16"
+output:
+  html_document:
+    df_print: paged
+  pdf_document:
+    latex_engine: xelatex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# #11
+
+**Question:**
+
+A company buys 100 light bulbs, each of which has an exponential lifetime of 1000 hours. What is the expected time for the first of these bulbs to burn out? (See Exercise 10.)
+
+**Work and Answer:**
+
+```{r}
+#num lights
+
+lights = 100
+
+#avg life per bulb
+
+avg_life = 1000
+
+#rate each bulb
+single_rate = 1 / avg_life
+
+#min
+rate_min = lights * single_rate
+
+exp_time= 1 / rate_min
+exp_time
+
+cat("The expected time for the first of these bulbs to burn is about", exp_time,"hours \n")
+```
+
+# #14
+
+**Question:**
+
+Assume that X1 and X2 are independent random variables, each having an exponential density with parameter λ. Show that Z = X1 − X2 has density $fZ(z) = \frac{1}{2} \lambda e^{-\lambda |z|}$.
+
+**Work and Answer:**
+
+```{r}
+library(ggplot2)
+
+
+#prob density of Z = X1 - X2
+
+prob_z = function(z, lambda) {
+  0.5 * lambda * exp(-lambda * abs(z))
+}
+
+lambda = 1
+z_values = seq(-10, 10, by = 0.1)
+
+
+#prob density of z vals
+
+prob_z_values = sapply(z_values, prob_z, lambda = lambda)
+prob_z_values = data.frame(z = z_values, prob_z = prob_z_values)
+
+
+#plot of probability dist func of Z
+
+ggplot(prob_z_values, aes(x = z, y = prob_z)) +
+  geom_line() +
+  ggtitle(expression(paste("Probability Distribution Function of ", Z, " = ", X[1], " - ", X[2]))) +
+  xlab("z") +
+  ylab(expression(f[Z](z)))
+
+```
+
+# #1
+
+**Question:**
+
+Let X be a continuous random variable with mean µ = 10 and variance $\sigma^2 = \frac{100}{3}$. Using Chebyshev's Inequality, find an upper bound for the following probabilities:
+
+(a) $P(|X - 10| \geq 2)$
+
+(b) $P(|X - 10| \geq 5)$
+
+(c) $P(|X - 10| \geq 9)$
+
+(d) $P(|X - 10| \geq 20)$
+
+**Work and Answer:**
+
+For any random variable X, with mean $\mu$ and variance $\sigma^2$ :
+
+$P(|X - \mu| \geq k\sigma) \leq \frac{1}{k^2}$
+
+```{r}
+#given
+mu = 10
+variance = 100 / 3
+
+#stdev
+
+std = sqrt(variance)
+
+#k values
+k_values = c(2, 5, 9, 20) / std
+
+#calc upper bounds
+upper_bounds = 1 / (k_values^2)
+
+#result for each condition dataframe
+result = data.frame(
+  Condition = c("|X - 10| >= 2", "|X - 10| >= 5", "|X - 10| >= 9", "|X - 10| >= 20"),
+  Upper_Bound = upper_bounds
+)
+
+print(result)
+
+```
